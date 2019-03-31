@@ -8,6 +8,8 @@ class App extends Component {
   constructor(props){
     super(props);
     this.addTrack = this.addTrack.bind(this);
+    this.removeTrack = this.removeTrack.bind(this);
+    this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.state = {
       searchResults: [
         {
@@ -54,9 +56,27 @@ class App extends Component {
   }
 
   addTrack(track) {
-    if(this.state.playlistTracks.find(savedTrack => savedTrack.id === track.id)) {
-      return;
+    let updatedTracks = this.state.playlistTracks;
+    if(!updatedTracks.find(savedTrack => savedTrack.id === track.id)) {
+      this.state.playlistTracks.push(track);
     }
+    this.setState({
+      playlistTracks: updatedTracks
+    });
+  }
+
+  removeTrack(track){
+    let updatedTracks = this.state.playlistTracks;
+    updatedTracks.filter(removedTrack => removedTrack.id !== track.id);
+    this.setState({
+      playlistTracks: updatedTracks
+    });
+  }
+
+  updatePlaylistName(name) {
+    this.setState({
+      playlistName: name
+    });
   }
 
   render() {
@@ -67,7 +87,7 @@ class App extends Component {
           <SearchBar />
             <div className="App-playlist">
               <SearchResults searchBar = {this.state.searchResults} onAdd = {this.addTrack}/>
-              <Playlist playlistName = {this.state.playlistName} playlistTracks = {this.state.playlistTracks}/>
+              <Playlist onNameChange = {this.updatePlaylistName} onRemove = {this.removeTrack} playlistName = {this.state.playlistName} playlistTracks = {this.state.playlistTracks}/>
             </div>
           </div>
       </div>
