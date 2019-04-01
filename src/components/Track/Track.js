@@ -8,10 +8,11 @@ class Track extends Component {
         this.addTrack = this.addTrack.bind(this);
         this.removeTrack = this.removeTrack.bind(this);
     }
-    
+
     renderAction() {
         return this.props.isRemoval ? <a onClick = {this.removeTrack} className="Track-action">-</a> : <a onClick = {this.addTrack} className="Track-action">+</a>;
     }
+
 
     addTrack() {
         return this.props.onAdd(this.props.track);
@@ -30,7 +31,6 @@ class Track extends Component {
                 </div>
                 <div>{this.renderAction()}</div>
             </div>
-            
         );
     }
 }
