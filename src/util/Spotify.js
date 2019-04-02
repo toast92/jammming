@@ -10,7 +10,7 @@ const Spotify = {
         //window.location.href returns the url of the page, then we use match to check if an expression that mathes our regex is present in it
         const hasAccessToken = window.location.href.match(/access_token=([^&]*)/);
         const hasExpiresIn = window.location.href.match(/expires_in=([^&]*)/);
-        if(hasAccessToken && hasExpiresIn)  {
+        if(hasAccessToken && hasExpiresIn) {
             userAccessToken = hasAccessToken[1]; //match method returns an array, where the value of the access token has index 1
             const expiresIn = Number(hasExpiresIn[1]); //match method returns an array, where the value of the expiration time of the token has index 1
             window.setTimeout(() => userAccessToken = '', expiresIn * 1000);
@@ -22,25 +22,28 @@ const Spotify = {
     },
 
     search(searchTerm) {
+        const accessToken = Spotify.getAccessToken();
         return fetch(`https://api.spotify.com/v1/search?type=track&q=${searchTerm}`, {
             headers: {
-                Authorization: `Bearer ${userAccessToken}`
+                Authorization: `Bearer ${accessToken}`
             }
         }).then(response => {
-                return response.json();
+            return response.json();
         }).then(jsonResponse => {
             if(!jsonResponse.tracks){
                 return [];
-            }
+            } else {
                 return jsonResponse.tracks.items.map(track => {
                     return {
                         id: track.id,
                         name: track.name,
-                        artist: track.artist,
-                        album: track.album,
+                        artist: track.artists[0].name,
+                        album: track.album.name,
                         uri: track.uri
-                    }
+                    } 
+                
                 });
+            }
         });
     },
 
